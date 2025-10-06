@@ -1,7 +1,18 @@
 import { resolve } from 'path'
+import path from 'path'
 import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import dts from 'vite-plugin-dts'
 
 export default defineConfig({
+  plugins: [
+    vue(),
+    dts({
+      outDir: 'dist',
+      include: ['src'],
+      insertTypesEntry: true
+    })
+  ],
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
@@ -17,5 +28,11 @@ export default defineConfig({
         }
       }
     }
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src')
+    },
+    dedupe: ['vue', 'vue-router']
   }
 })

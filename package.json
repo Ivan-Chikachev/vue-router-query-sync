@@ -1,6 +1,6 @@
 {
   "name": "vue-router-query-sync",
-  "version": "0.0.1",
+  "version": "0.0.12",
   "description": "Vue composable for syncing router query params with store",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -10,26 +10,38 @@
   },
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
     }
   },
-  "files": ["dist"],
-  "keywords": ["vue", "router", "query", "sync", "pinia", "composable"],
-  "author": "Your Name <your.email@example.com>",
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "vue",
+    "router",
+    "query",
+    "sync",
+    "pinia",
+    "store",
+    "composable"
+  ],
+  "author": "Ivan Chikachev <ivan-chikachev@mail.ru>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/vue-router-query-sync.git"
+    "url": "https://github.com/Ivan-Chikachev/vue-router-query-sync"
   },
   "peerDependencies": {
-    "vue": "^3.0.0",
-    "vue-router": "^4.0.0"
+    "vue": "^3.3.13",
+    "vue-router": "^4.0.3"
   },
   "devDependencies": {
+    "vite-plugin-dts": "^4.5.4",
     "@types/node": "^20.1.0",
     "@typescript-eslint/eslint-plugin": "^8.4.0",
+    "@vitejs/plugin-vue": "^5.2.3",
     "@vue/eslint-config-typescript": "^12.0.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
