@@ -16,14 +16,22 @@
 
 - Changes in your store update the URL query.
 - Changes in the URL query update your store.
-- Batched updates to avoid excessive router.replace calls.
+- Batched updates prevent excessive `router.replace` calls.
 
 ---
 
+## 💡 Why use this plugin?
+
+- 🔄 Keeps your app state and URL perfectly in sync — no more manual watchers or `router.replace` logic.
+- 🧠 Works with **Pinia**, **local refs**, or any reactive source.
+- 🧩 Handles multiple query keys and isolated contexts safely.
+- ⚙️ Fully typed with TypeScript and designed for Vue 3’s Composition API.
+- 🚀 Tiny footprint — optimized for production.
+
 ## ✅ Requirements
 
-- Vue 3 (`vue@^3.3.13`)
-- Vue Router 4 (`vue-router@^4.0.3`)
+- Vue 3
+- Vue Router 4
 
 ---
 
@@ -63,7 +71,8 @@ createApp(App)
 
 ## 🧩 Basic Usage
 
-Sync a value with a query param named `tab`:
+- You can use `useQuerySync` several times in one component.
+- Sync a value with a query param named `tab`:
 
 ```ts
 import { useQuerySync } from 'vue-router-query-sync'

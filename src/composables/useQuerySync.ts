@@ -4,18 +4,18 @@ import replaceRouterQueue from '@/utils/replaceRouterQueue'
 import { getRouter } from '@/router'
 
 /**
- * Синхронизирует значение из стора с query-параметром в адресной строке
+ * Synchronizes a store value with a query parameter in the URL.
  *
- * @param key - имя параметра в query, например "tab"
- * @param get - функция, возвращающая текущее значение из стора
- * @param set - функция, устанавливающая значение в стор
- * @param options.deps - список зависимостей, чтобы синхронизировать только после их изменения
- * @param options.context - конекст использования query-параметра, обязателен, если на странице нессколько одинаковых query-параметра
+ * @param key - The name of the query parameter, e.g. "tab".
+ * @param get - A function that returns the current value from the store.
+ * @param set - A function that updates the value in the store.
+ * @param options.deps - A list of reactive dependencies that must change before synchronization occurs.
+ * @param options.context - A unique context identifier, required when multiple instances use the same query key on the same page.
  *
- * ⚠️ Важно:
- * Если на одной странице может быть несколько компонентов с одинаковыми query-ключами —
- * обязательно передавайте уникальный `context`, чтобы не было конфликтов.
- * Или всегда использовать уникальные ключи (например вместо "page" - "usersPage").
+ * ⚠️ Important:
+ * If multiple components on the same page use the same query key,
+ * you must provide a unique `context` to prevent conflicts.
+ * Alternatively, always use unique query keys (for example, instead of "page", use "usersPage").
  */
 
 export function useQuerySync<T extends string | number>(

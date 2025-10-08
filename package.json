@@ -1,6 +1,6 @@
 {
   "name": "vue-router-query-sync",
-  "version": "0.0.12",
+  "version": "1.0.0",
   "description": "Vue composable for syncing router query params with store",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -20,12 +20,16 @@
   ],
   "keywords": [
     "vue",
+    "vue3",
+    "vue plugin",
     "router",
     "query",
     "sync",
     "pinia",
     "store",
-    "composable"
+    "composable",
+    "router query",
+    "query sync"
   ],
   "author": "Ivan Chikachev <ivan-chikachev@mail.ru>",
   "license": "MIT",
