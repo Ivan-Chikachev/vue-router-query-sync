@@ -1,6 +1,18 @@
 import { onBeforeMount, onBeforeUnmount, watch } from 'vue'
 import { QuerySyncOptions } from '@/types'
 import replaceRouterQueue from '@/utils/replaceRouterQueue'
+
+function parseQueryValue(queryVal: string): string | number {
+  if (queryVal === '') {
+    return queryVal
+  }
+  const numVal = Number(queryVal)
+  if (!isNaN(numVal)) {
+    return numVal
+  }
+  return queryVal
+}
+
 import { getRouter } from '@/router'
 
 /**
@@ -17,7 +29,6 @@ import { getRouter } from '@/router'
  * you must provide a unique `context` to prevent conflicts.
  * Alternatively, always use unique query keys (for example, instead of "page", use "usersPage").
  */
-
 export function useQuerySync<T extends string | number>(
   key: string,
   get: () => T | null,
@@ -29,51 +40,59 @@ export function useQuerySync<T extends string | number>(
   const { deps = [], context } = options
   const fullKey = context ? `${context}_${key}` : key
 
-  const applyQuery = (queryVal: unknown, force = false) => {
+  const applyQueryToStore = (queryVal: unknown, force = false) => {
     if (typeof queryVal === 'string') {
-      const val = (isNaN(Number(queryVal)) ? queryVal : Number(queryVal)) as T
-      if (force || val !== get()) {
-        set(val)
-        const adjustedVal = get() // Проверяем, изменилось ли значение после set (например, из-за корректировки в set)
-        if (adjustedVal !== val && adjustedVal !== null) {
-          replaceRouterQueue(fullKey, adjustedVal) // Автоматически обновляем query, если set скорректировал значение
+      const parsedVal = parseQueryValue(queryVal) as T
+
+      if (force || parsedVal !== get()) {
+        set(parsedVal)
+
+        // Проверяем, изменилось ли значение после set
+        // (например, из-за валидации в setter)
+        const adjustedVal = get()
+        if (adjustedVal !== parsedVal && adjustedVal !== null) {
+          // Автоматически обновляем query, если set скорректировал значение
+          replaceRouterQueue(fullKey, adjustedVal)
         }
       }
-    } else {
+    } else if (queryVal === undefined) {
+      // Query параметр отсутствует
       const storeVal = get()
       if (storeVal !== null) {
-        // query пустой, но store есть → кладём его в url
+        // Store не пустой → синхронизируем его в URL
         replaceRouterQueue(fullKey, storeVal)
       }
     }
   }
 
-  // при mount
-  onBeforeMount(() => {
-    if (deps.length > 0) {
-      watch(deps, () => applyQuery(route.value.query[fullKey]))
-    } else {
-      applyQuery(route.value.query[fullKey])
-    }
-  })
-  // при изменении store обновляем query
-  watch(get, (newVal) => {
-    const q = route.value.query[fullKey]
+  const syncStoreToQuery = (newVal: T | null) => {
+    const currentQueryVal = route.value.query[fullKey]
+
     if (newVal === null) {
-      if (q !== undefined) {
+      if (currentQueryVal !== undefined) {
         replaceRouterQueue(fullKey, null)
       }
-    } else if (q !== String(newVal)) {
-      replaceRouterQueue(fullKey, newVal)
+    } else {
+      const queryString = String(newVal)
+      if (currentQueryVal !== queryString) {
+        replaceRouterQueue(fullKey, newVal)
+      }
+    }
+  }
+
+  onBeforeMount(() => {
+    if (deps.length > 0) {
+      watch(deps, () => applyQueryToStore(route.value.query[fullKey]))
+    } else {
+      applyQueryToStore(route.value.query[fullKey])
     }
   })
 
-  // при изменении query обновляем store
+  watch(get, syncStoreToQuery)
+
   watch(
     () => route.value.query[fullKey],
-    (newVal) => {
-      applyQuery(newVal)
-    }
+    (newVal) => applyQueryToStore(newVal)
   )
 
   onBeforeUnmount(() => {

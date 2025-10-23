@@ -1,6 +1,6 @@
 {
   "name": "vue-router-query-sync",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Vue composable for syncing router query params with store",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

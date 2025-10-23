@@ -71,12 +71,15 @@ createApp(App)
 
 ## 🧩 Basic Usage
 
-- You can use `useQuerySync` several times in one component.
-- Sync a value with a query param named `tab`:
+You can use `useQuerySync` several times in one component.
+
+#### Sync a value with a query param named `tab`:
+
+- Visiting `?tab=favorite` sets `tab.value = 'favorite'`.
+- Changing `tab.value = 'all'` updates the URL to `?tab=all`.
 
 ```ts
 import { useQuerySync } from 'vue-router-query-sync'
-import { ref } from 'vue'
 
 const tab = ref<'favorite' | 'all'>('all')
 
@@ -87,10 +90,36 @@ useQuerySync(
 )
 ```
 
-Now:
-- Visiting `?tab=favorite` sets `tab.value = 'favorite'`.
-- Changing `tab.value = 'all'` updates the URL to `?tab=all`.
+### Multiple values
+#### Sync a value with a query param named `brands`:
 
+- Visiting `?brands=lg%samsung` sets `brands.value = ['lg', 'samsung']`.
+- Changing `brands.value = ['lg']` updates the URL to `?brands=lg`.
+
+```ts
+import { useQuerySync } from 'vue-router-query-sync'
+
+const brands = [
+    { value: 'lg', label: 'LG' },
+    { value: 'samsung', label: 'Samsung' }
+]
+
+const selectedBrands = ref<string[]>([])
+
+useQuerySync(
+    'brands',
+    () => {
+        return selectedBrands.value.length > 0 ? selectedBrands.value.join('%') : null
+    },
+    (val) => {
+        if (typeof val === 'string' && val) {
+            selectedBrands.value = val.includes('%') ? val.split('%') : [val]
+        } else {
+            selectedBrands.value = []
+        }
+    }
+)
+```
 ---
 
 ## 🔧 API
